@@ -11,7 +11,7 @@ A match is a complete session of the game, where the player who first gets to 10
 A round starts with both players at a sum of 0, and they take simultaneous turns rolling dice and adding up values aiming to achieve 21. If a player goes over 21, they busted. A round can have up to 7 turns and at the end of the round the player with higher score wins, if not busted. If a player achieves 21 or both player bust, the round ends in that turn. The winning player gets 2 points if they achieved 21, or 1 point if other value. If there is a tie (both players achieve 21 in the same turn, both players bust, or both players have the same score at the end of the round), no players get points.
 
 A turn is composed of the following steps:
-1. Each player choose if they will Roll or Stand, simulataneously and without knowledge of the other player's decision. If both players chose Stand, the round ends in this turn. A busted player always Stand. If one player is busted and the othet not, the non-busted player can choose to Stand or Roll.
+1. Each player choose if they will Roll or Stand, simulataneously and without knowledge of the other player's decision. If both players chose Stand, the round ends in this turn. A busted player always Stand. If one player is busted and the other not, the non-busted player can choose to Stand or Roll.
 2. Dice are rolled, if any
 3. Sums are computed and win conditions evaluated.
 
@@ -53,7 +53,20 @@ This game code flow was designed to allow the Player 2 strategry to possibly che
 
 ## UI
 
-## Analysis
+## Analyzes
+
+Analyzes are done at the perspective of a single round, assuming the round will end at that turn. The analyses module should compute all the permutations of actions and rolls for that game state and aggregate the results appropriately to compute the stats bellow. For EV computations, assume wins value are equal to points gained, ties are value zero, and losses are valued negative the ammount of points the opponent gained. 
+
+
+The analysis object should contain:
+
+- Probability P1 bust
+- Probability P2 bust
+- 2x2 Result table according to P1 and P2 actions, with each "cell" of the table describing the probabilities of P1 win, Tie, P2 win
+- 2x2 P1 Payoff table
+- 2x2 P2 Payoff table
+- Text analysis conclusion describing: Dominant strategy for P1 and P2, if any, and the best response to the dominant strategy, in case only one player has a dominant strategy. **WORK NEEDED, cases bust, se collab**
+
 
 ## Strategies
 
@@ -63,7 +76,7 @@ This game code flow was designed to allow the Player 2 strategry to possibly che
 - **Moderate Risk Taker:** rolls if P(bust) < 0.50 and the opponent is not busted
 - **High Risk Taker:** rolls if P(bust) < 0.75 and the opponent is not busted
 - **Relative Risk Taker:** rolls if their P(bust) is less than the opponent P(bust) and the opponent is not busted
-- **Game Theorist:** Don't roll if the opponent is busted. If have a dominant strategy, play it. If the opponent has a dominant strategy, play the best move against it.  Otherwise, play at the indifference threshold.
+- **Game Theorist:** If have a dominant strategy, play it. If the opponent has a dominant strategy, play the best response to it. If the best response is indiferent, play randomly. **May need work**
 - **Mind Reader:** Can only be selected for Player 2. Is a cheater AI. Checks if the Player 1 rolled or not, but don't check the result of the roll. Takes the optimal action based on the Player 1 action.
 - **Future Seer:** Can only be selected for Player 2. Is a cheater AI. Checks the result of Player 1 roll and takes the optimal action based on the Player 1 roll.
 
