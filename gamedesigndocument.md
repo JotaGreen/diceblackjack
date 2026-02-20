@@ -11,7 +11,7 @@ A match is a complete session of the game, where the player who first gets to 10
 A round starts with both players at a sum of 0, and they take simultaneous turns rolling dice and adding up values aiming to achieve 21. If a player goes over 21, they busted. A round can have up to 7 turns and at the end of the round the player with higher score wins, if not busted. If a player achieves 21 or both player bust, the round ends in that turn. The winning player gets 2 points if they achieved 21, or 1 point if other value. If there is a tie (both players achieve 21 in the same turn, both players bust, or both players have the same score at the end of the round), no players get points.
 
 A turn is composed of the following steps:
-1. Each player choose if they will Roll or Stand, simulataneously and without knowledge of the other player's decision. If both players chose Stand, the round ends in this turn. A busted player always Stand.
+1. Each player choose if they will Roll or Stand, simulataneously and without knowledge of the other player's decision. If both players chose Stand, the round ends in this turn. A busted player always Stand. If one player is busted and the othet not, the non-busted player can choose to Stand or Roll.
 2. Dice are rolled, if any
 3. Sums are computed and win conditions evaluated.
 
@@ -45,7 +45,11 @@ A summary of the game code flow is:
 5. The controller asks the ui to update with the new GameState. The ui has interactive elements described in detail in a following section, to reveal the results progressively to the player. When the player selects to proceed to the next turn, the ui communicates to the controller, the controller tells the engine to proceed.
 6. Steps 2 - 5 (a turn) are repeated until the end of match.
 
-This game code flow was designed to allow the Player 2 strategry to possibly cheat and choose its action based on the action and roll of Player 1 (some AI strategies were intentionally designed to cheat), and to present the end of turn state to the user before proceeding to the next turn (even if there is no action to be taken).
+8. The player selects to proceed to the next turn (if the match did not end). The ui communicates to the controller. The controller communicates to the engine with a "Proceed" action. The engine returns a new GameState (start of next turn). The controller obtains an analysis of the GameState.
+
+
+
+This game code flow was designed to allow the Player 2 strategry to possibly cheat (don't follow the game rules) and choose its action based on the action and roll of Player 1 (some AI strategies were intentionally designed to cheat), and to present the end of turn state to the user before proceeding to the next turn (even if there is no action to be taken).
 
 ## UI
 
@@ -54,11 +58,14 @@ This game code flow was designed to allow the Player 2 strategry to possibly che
 ## Strategies
 
 - **21 or bust:** rolls if sum < 21
-- **Low Risk Taker:** rolls if P(bust) < 0.25
-- **Moderate Risk Taker:** rolls if P(bust) < 0.50
-- **High Risk Taker:** rolls if P(bust) < 0.75
-- **Relative Risk Taker:** rolls if their P(bust) is less than the opponent P(bust)
+- **Won't stay behind:** roll if their sum is less than the opponent sum and the opponent is not busted
+- **Low Risk Taker:** rolls if P(bust) < 0.25 and the opponent is not busted
+- **Moderate Risk Taker:** rolls if P(bust) < 0.50 and the opponent is not busted
+- **High Risk Taker:** rolls if P(bust) < 0.75 and the opponent is not busted
+- **Relative Risk Taker:** rolls if their P(bust) is less than the opponent P(bust) and the opponent is not busted
 - 
+- **Mind Reader:** Can only be selected for Player 2. Is a cheater AI. Checks if the Player 1 rolled or not, but don't check the result of the roll. Takes the optimal action based on the Player 1 action.
+- **Future Seer:** Can only be selected for Player 2. Is a cheater AI. Checks the result of Player 1 roll and takes the optimal action based on the Player 1 roll.
 
 
 
@@ -71,4 +78,4 @@ This game code flow was designed to allow the Player 2 strategry to possibly che
 
 
 
-8. The player selects to proceed to the next turn (if the match did not end). The ui communicates to the controller. The controller communicates to the engine with a "Proceed" action. The engine returns a new GameState (start of next turn). The controller obtains an analysis of the GameState.
+
