@@ -63,7 +63,7 @@ This game code flow was designed to allow the Player 2 strategry to possibly che
 - **Moderate Risk Taker:** rolls if P(bust) < 0.50 and the opponent is not busted
 - **High Risk Taker:** rolls if P(bust) < 0.75 and the opponent is not busted
 - **Relative Risk Taker:** rolls if their P(bust) is less than the opponent P(bust) and the opponent is not busted
-- 
+- **Game Theorist:** Don't roll if the opponent is busted. If have a dominant strategy, play it. If the opponent has a dominant strategy, play the best move against it.  Otherwise, play at the indifference threshold.
 - **Mind Reader:** Can only be selected for Player 2. Is a cheater AI. Checks if the Player 1 rolled or not, but don't check the result of the roll. Takes the optimal action based on the Player 1 action.
 - **Future Seer:** Can only be selected for Player 2. Is a cheater AI. Checks the result of Player 1 roll and takes the optimal action based on the Player 1 roll.
 
