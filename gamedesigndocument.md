@@ -15,7 +15,7 @@ A turn is composed of the following steps:
 2. Dice are rolled, if any
 3. Sums are computed and win conditions evaluated.
 
-## Implementation
+## Code Architecture
 
 The game will run as a webpage hosted on GitHub Pages, to be accessed on mobile. It should be composed of basic html, css, and JavaScript, avoiding external dependencies unless very helpful and using well stablished and reliable libraries. The code should be clear and robust, with plenty of comments, documentation, and console logs. The code should handle errors by stopping execution and giving a useful message, and not by default fallbacks (for example, if the engine receives an illegal action from a player, it should stop execution, not default to a random legal action). Initially, the game will be implemented to be played with one human player (Player1) and one AI player, but there are plans to run simulations of AI vs AI in the future, so the code architecture is planned to facilitate these future developments.
 
@@ -37,9 +37,38 @@ The UI module controls the website UI presenting information to the human player
 
 The controller module handles communication and flow among the other modules. The other modules do not communicate directly between them.
 
-A summary of the flow of the game is:
-1. The user chooses the die for each player and the AI strategy. The ui communicates this choice to the controller. The controller calls the engine to initiate a match. The engine returns a GameState to the controller. The controller obtains an analysis of the GameState. The controller ask the ui to move to the main game view and update according to the new GameState.
-2. Player 1 choses their action in the ui. The ui comunicates to the controller. The controller communicates to the engine. The engine rolls the die for player 1, if needed, and returns a GameState with the Player 1 processed.
-3. The controller communicates the GameState to the AI strategy. The Strategy choses an action. The controller communicates the action to the engine. The engine processes the Player 2 action, rolls die if needed and returns a GameState with the end of turn state (info of both rolls, sum of scores, win conditions)
-4. The controller asks the ui to update with the new GameState. The ui has interactive elements described in detail in a following section, to reveal the results progressively to the player.
-5. The player selects to proceed to the next turn (if the match did not end). The ui communicates to the controller. The controller communicates to the engine with a "Proceed" action. The engine returns a new GameState (start of next turn). The controller obtains an analysis of the GameState.
+A summary of the game code flow is:
+1. The user chooses the die for each player and the AI strategy. The ui communicates this choice to the controller. The controller calls the engine to initiate a match.
+2. The engine returns a GameState to the controller. The controller obtains an analysis of the GameState. The controller ask the ui to move to the main game view and update according to the new GameState.
+3. Player 1 choses their action in the ui. The ui comunicates to the controller. The controller communicates to the engine. The engine rolls the die for player 1, if needed, and returns a GameState with the Player 1 processed.
+4. The controller communicates the GameState to the AI strategy. The Strategy choses an action. The controller communicates the action to the engine. The engine processes the Player 2 action, rolls die if needed, and returns a GameState with the end of turn state (info of both rolls, sum of scores, win conditions)
+5. The controller asks the ui to update with the new GameState. The ui has interactive elements described in detail in a following section, to reveal the results progressively to the player. When the player selects to proceed to the next turn, the ui communicates to the controller, the controller tells the engine to proceed.
+6. Steps 2 - 5 (a turn) are repeated until the end of match.
+
+This game code flow was designed to allow the Player 2 strategry to possibly cheat and choose its action based on the action and roll of Player 1 (some AI strategies were intentionally designed to cheat), and to present the end of turn state to the user before proceeding to the next turn (even if there is no action to be taken).
+
+## UI
+
+## Analysis
+
+## Strategies
+
+- **21 or bust:** rolls if sum < 21
+- **Low Risk Taker:** rolls if P(bust) < 0.25
+- **Moderate Risk Taker:** rolls if P(bust) < 0.50
+- **High Risk Taker:** rolls if P(bust) < 0.75
+- **Relative Risk Taker:** rolls if their P(bust) is less than the opponent P(bust)
+- 
+
+
+
+
+
+
+
+
+
+
+
+
+8. The player selects to proceed to the next turn (if the match did not end). The ui communicates to the controller. The controller communicates to the engine with a "Proceed" action. The engine returns a new GameState (start of next turn). The controller obtains an analysis of the GameState.
