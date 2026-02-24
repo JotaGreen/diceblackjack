@@ -63,20 +63,20 @@ The analysis object should contain:
 - Probability P1 bust
 - Probability P2 bust
 - 2x2 Result table according to P1 and P2 actions, with each "cell" of the table describing the probabilities of P1 win, Tie, P2 win
-- 2x2 P1 Payoff table
-- 2x2 P2 Payoff table
-- Text analysis conclusion describing: Dominant strategy for P1 and P2, if any, and the best response to the dominant strategy, in case only one player has a dominant strategy. **WORK NEEDED, cases bust, se collab**
+- 2x2 Payoff table, with positive EV indicating P1 winning points and negative E2 indicating P2 winning points
+- The Minimax move for P1 and P2
+- If a mixed equilibrium, the probabilitynof rolling for P1 and P2
 
 
 ## Strategies
 
 - **21 or bust:** rolls if sum < 21
-- **Won't stay behind:** roll if their sum is less than the opponent sum and the opponent is not busted
-- **Low Risk Taker:** rolls if P(bust) < 0.25 and the opponent is not busted
-- **Moderate Risk Taker:** rolls if P(bust) < 0.50 and the opponent is not busted
-- **High Risk Taker:** rolls if P(bust) < 0.75 and the opponent is not busted
+- **Won't stay behind:** roll if their sum is less than the opponent sum, and the opponent is not busted
+- **Low Risk Taker:** rolls if P(bust) < 0.25, or if P(bust) = 0, if the opponent is bust
+- **Moderate Risk Taker:** rolls if P(bust) < 0.50, except when the oponent is busted, then rolls if P(bust) = 0 or if the individual EV is the same rolling or standing
+- **High Risk Taker:** rolls if P(bust) < 0.75
 - **Relative Risk Taker:** rolls if their P(bust) is less than the opponent P(bust) and the opponent is not busted
-- **Game Theorist:** If have a dominant strategy, play it. If the opponent has a dominant strategy, play the best response to it. If the best response is indiferent, play randomly. **May need work**
+- **Game Theorist:** Plays the Minimax strategy. If indifferent, rolls if P(bust) = 0. If mixed roll at the defined probability.
 - **Mind Reader:** Can only be selected for Player 2. Is a cheater AI. Checks if the Player 1 rolled or not, but don't check the result of the roll. Takes the optimal action based on the Player 1 action.
 - **Future Seer:** Can only be selected for Player 2. Is a cheater AI. Checks the result of Player 1 roll and takes the optimal action based on the Player 1 roll.
 
