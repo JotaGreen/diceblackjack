@@ -30,9 +30,11 @@
     <main id="app" class="max-w-4xl mx-auto p-4 md:p-6 fade-in">
         
         <!-- HEADER -->
-        <header class="text-center mb-8">
-            <h1 class="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400 mb-2">🎲 Dice Blackjack 💣</h1>
-            <p class="text-slate-400">Race to 21. Don't Bust. First to 10 Points Wins.</p>
+        <header class="text-center mb-8 text-4xl md:text-5xl font-extrabold">
+            <span>🎲</span> 
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">Dice Blackjack</span> 
+            <span>💣</span>
+            <p class="text-base font-normal text-slate-400 mt-2">Race to 21. Don't Bust. First to 10 Points Wins.</p>
         </header>
 
         <!-- MENU SCREEN -->
@@ -43,8 +45,9 @@
                 <div>
                     <label class="block text-sm font-medium text-slate-300 mb-1">Your Dice (Player 1)</label>
                     <select id="p1-dice-select" class="w-full bg-slate-900 border border-slate-600 rounded-lg p-2 text-white focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                        <option value="Random" selected>Random</option>
                         <option value="4">d4</option>
-                        <option value="6" selected>d6</option>
+                        <option value="6">d6</option>
                         <option value="8">d8</option>
                         <option value="10">d10</option>
                         <option value="12">d12</option>
@@ -91,77 +94,117 @@
         <div id="game-screen" class="hidden space-y-6">
             
             <!-- Scoreboard -->
-            <div class="flex justify-between items-center bg-slate-800 rounded-xl p-4 border border-slate-700 shadow-md">
-                <div class="text-center w-1/3">
-                    <p class="text-xs text-slate-400 uppercase tracking-wider">Player 1</p>
-                    <p class="text-3xl font-bold text-emerald-400" id="ui-p1-score">0</p>
+            <div class="flex justify-between items-stretch bg-slate-800 rounded-xl p-4 border border-slate-700 shadow-md">
+                <div class="text-center w-1/3 flex flex-col justify-center">
+                    <p class="text-xs text-slate-400 uppercase tracking-wider">Player 1 (You)(<span id="ui-sb-p1-die" class="text-emerald-300">d6</span>)</p>
+                    <p class="text-4xl font-black text-emerald-400 mt-1" id="ui-p1-score">0</p>
                 </div>
-                <div class="text-center w-1/3 border-x border-slate-700">
-                    <p class="text-xs text-slate-400 uppercase tracking-wider">Target</p>
-                    <p class="text-xl font-bold text-white">10 Pts</p>
-                    <p class="text-xs text-slate-400 mt-1" id="ui-turn-counter">Turn 1/7</p>
+                <div class="text-center w-1/3 border-x border-slate-700 flex flex-col items-center justify-center">
+                    <p class="text-xs text-slate-400 uppercase tracking-wider mb-1">Turn</p>
+                    <p class="text-4xl font-black text-white" id="ui-turn-counter">1</p>
+                    <p class="text-xs text-slate-500 mt-1">out of 7</p>
                 </div>
-                <div class="text-center w-1/3">
-                    <p class="text-xs text-slate-400 uppercase tracking-wider" id="ui-p2-name">Player 2 (AI)</p>
-                    <p class="text-3xl font-bold text-cyan-400" id="ui-p2-score">0</p>
+                <div class="text-center w-1/3 flex flex-col justify-center">
+                    <p class="text-xs text-slate-400 uppercase tracking-wider">Player 2 (AI)(<span id="ui-sb-p2-die" class="text-cyan-300">d6</span>)</p>
+                    <p class="text-4xl font-black text-cyan-400 mt-1" id="ui-p2-score">0</p>
                 </div>
             </div>
 
-            <!-- Playing Area -->
+            <!-- Playing Area Grid -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Player 1 Panel -->
                 <div class="bg-slate-800 rounded-xl p-6 border border-slate-700 flex flex-col items-center relative overflow-hidden">
-                    <div id="p1-bust-overlay" class="hidden absolute inset-0 bg-red-900/80 z-10 flex items-center justify-center">
-                        <span class="text-4xl font-black text-red-200 uppercase rotate-12 drop-shadow-lg border-4 border-red-200 p-2">Busted</span>
+                    <div id="p1-bust-overlay" class="hidden absolute inset-0 bg-red-900/40 z-20 flex items-center justify-center pointer-events-none">
+                        <span class="text-5xl font-black text-red-200 uppercase rotate-12 drop-shadow-2xl border-4 border-red-200 p-2 opacity-80">Busted</span>
                     </div>
-                    <h3 class="text-lg font-semibold text-slate-300 mb-2">You (Player 1)</h3>
-                    <div class="w-16 h-16 bg-slate-700 rounded-lg flex items-center justify-center mb-4 border border-slate-600 shadow-inner">
-                        <span class="text-2xl font-bold" id="ui-p1-die">d6</span>
-                    </div>
-                    <div class="text-6xl font-black mb-6 text-white" id="ui-p1-sum">0</div>
+                    <h3 class="text-xl font-bold text-slate-300 mb-6 uppercase tracking-wider text-emerald-400/80">Player 1</h3>
                     
-                    <div class="flex space-x-4 w-full" id="p1-controls">
-                        <button id="btn-roll" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 px-4 rounded-lg shadow-lg transform transition active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed">
-                            Roll
-                        </button>
-                        <button id="btn-stand" class="flex-1 bg-slate-600 hover:bg-slate-500 text-white font-bold py-3 px-4 rounded-lg shadow-lg transform transition active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed">
-                            Stand
-                        </button>
+                    <!-- P1 Progress Bar -->
+                    <div class="w-full h-14 bg-slate-900 rounded-xl border border-slate-600 shadow-inner relative overflow-hidden z-10">
+                        <div id="p1-progress-bar" class="absolute left-0 top-0 h-full bg-emerald-500 transition-all duration-500 ease-out" style="width: 0%;"></div>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <span class="text-3xl font-black text-white drop-shadow-md z-10"><span id="ui-p1-sum">0</span><span class="text-lg text-white/50 ml-1">/ 21</span></span>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Player 2 Panel -->
                 <div class="bg-slate-800 rounded-xl p-6 border border-slate-700 flex flex-col items-center relative overflow-hidden">
-                    <div id="p2-bust-overlay" class="hidden absolute inset-0 bg-red-900/80 z-10 flex items-center justify-center">
-                        <span class="text-4xl font-black text-red-200 uppercase -rotate-12 drop-shadow-lg border-4 border-red-200 p-2">Busted</span>
+                    <div id="p2-bust-overlay" class="hidden absolute inset-0 bg-red-900/40 z-20 flex items-center justify-center pointer-events-none">
+                        <span class="text-5xl font-black text-red-200 uppercase -rotate-12 drop-shadow-2xl border-4 border-red-200 p-2 opacity-80">Busted</span>
                     </div>
-                    <h3 class="text-lg font-semibold text-slate-300 mb-2" id="ui-p2-strategy-label">AI</h3>
-                    <div class="w-16 h-16 bg-slate-700 rounded-lg flex items-center justify-center mb-4 border border-slate-600 shadow-inner">
-                        <span class="text-2xl font-bold" id="ui-p2-die">d6</span>
-                    </div>
-                    <div class="text-6xl font-black mb-6 text-white" id="ui-p2-sum">0</div>
+                    <h3 class="text-xl font-bold text-slate-300 mb-6 uppercase tracking-wider text-cyan-400/80">Player 2</h3>
                     
-                    <div class="w-full text-center p-3 bg-slate-900 rounded-lg border border-slate-700">
-                        <p class="text-sm text-slate-400 uppercase tracking-wider mb-1">Last Action</p>
-                        <p class="text-lg font-bold text-cyan-300" id="ui-p2-action">Waiting...</p>
+                    <!-- P2 Progress Bar -->
+                    <div class="w-full h-14 bg-slate-900 rounded-xl border border-slate-600 shadow-inner relative overflow-hidden z-10">
+                        <div id="p2-progress-bar" class="absolute left-0 top-0 h-full bg-cyan-500 transition-all duration-500 ease-out" style="width: 0%;"></div>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <span class="text-3xl font-black text-white drop-shadow-md z-10"><span id="ui-p2-sum">0</span><span class="text-lg text-white/50 ml-1">/ 21</span></span>
+                        </div>
                     </div>
                 </div>
             </div>
 
+            <!-- Player Controls Panel -->
+            <div id="controls-panel" class="max-w-md mx-auto">
+                <div class="flex space-x-4 w-full bg-slate-800 p-4 rounded-xl border border-slate-700 shadow-lg">
+                    <button id="btn-roll" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white text-xl font-black py-4 px-4 rounded-lg shadow-md transform transition active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed">
+                        ROLL
+                    </button>
+                    <button id="btn-stand" class="flex-1 bg-slate-600 hover:bg-slate-500 text-white text-xl font-black py-4 px-4 rounded-lg shadow-md transform transition active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed">
+                        STAND
+                    </button>
+                </div>
+            </div>
+
             <!-- Inter-Turn / Round Resolution Modal -->
-            <div id="resolution-panel" class="hidden bg-slate-800 rounded-xl p-6 border border-emerald-500/50 shadow-lg text-center fade-in">
-                <h3 class="text-2xl font-bold mb-2 text-white" id="res-title">Turn Results</h3>
-                <p class="text-slate-300 mb-4" id="res-desc">Player 1 rolled 4. Player 2 Stood.</p>
-                <button id="btn-next" class="bg-gradient-to-r from-emerald-500 to-cyan-600 hover:from-emerald-400 hover:to-cyan-500 text-white font-bold py-2 px-8 rounded-lg shadow-lg transform transition active:scale-95">
+            <div id="resolution-panel" class="hidden bg-slate-800 rounded-xl p-6 md:p-8 border border-slate-500 shadow-2xl text-center fade-in max-w-2xl mx-auto w-full relative overflow-hidden">
+                <div class="absolute inset-0 bg-gradient-to-b from-transparent to-slate-900/50 pointer-events-none"></div>
+                
+                <h3 class="text-2xl font-bold mb-6 text-white uppercase tracking-widest relative z-10" id="res-title">Turn Results</h3>
+                
+                <div class="grid grid-cols-2 gap-4 md:gap-8 mb-6 relative z-10">
+                    <!-- P1 Result Box -->
+                    <div class="bg-slate-900 rounded-xl p-4 border border-slate-700 shadow-inner">
+                        <p class="text-emerald-400 font-bold uppercase tracking-wider text-sm mb-2">Player 1</p>
+                        <div class="text-3xl md:text-4xl font-black text-white mb-1" id="res-p1-action">Roll</div>
+                        <div class="text-xl font-bold text-slate-400" id="res-p1-roll">+5</div>
+                    </div>
+                    <!-- P2 Result Box -->
+                    <div class="bg-slate-900 rounded-xl p-4 border border-slate-700 shadow-inner">
+                        <p class="text-cyan-400 font-bold uppercase tracking-wider text-sm mb-2">Player 2</p>
+                        <div class="text-3xl md:text-4xl font-black text-white mb-1" id="res-p2-action">Stand</div>
+                        <div class="text-xl font-bold text-slate-400" id="res-p2-roll">-</div>
+                    </div>
+                </div>
+
+                <!-- Round End Info (Revealed only if round ended) -->
+                <div id="res-round-info" class="hidden bg-slate-900 rounded-xl p-5 border border-slate-700 mb-6 shadow-inner relative z-10">
+                    <p class="text-amber-400 font-bold text-xl mb-2" id="res-end-reason">Player 1 hit 21 exactly!</p>
+                    <p class="text-white text-2xl font-black" id="res-score-update">Player 1 Wins! (+2 pts)</p>
+                </div>
+
+                <button id="btn-next" class="relative z-10 w-full md:w-auto bg-gradient-to-r from-emerald-500 to-cyan-600 hover:from-emerald-400 hover:to-cyan-500 text-white font-bold py-3 px-12 rounded-lg shadow-lg transform transition active:scale-95 text-lg">
                     Continue
                 </button>
             </div>
 
-            <!-- Analysis Toggle -->
-            <div class="text-center">
-                <button id="btn-toggle-analysis" class="text-slate-400 hover:text-white text-sm underline transition">
+            <!-- Toggles for Optional Panels -->
+            <div class="flex justify-center space-x-6 text-sm">
+                <button id="btn-toggle-analysis" class="text-slate-400 hover:text-white underline transition">
                     Show Statistical Analyzes
                 </button>
+                <button id="btn-toggle-log" class="text-slate-400 hover:text-white underline transition">
+                    Show Match History
+                </button>
+            </div>
+
+            <!-- Game Log Panel (Hidden by default) -->
+            <div id="log-panel" class="hidden bg-slate-900 rounded-xl p-4 border border-slate-800 shadow-inner fade-in">
+                <h3 class="text-sm font-bold text-slate-500 uppercase tracking-wider mb-2 border-b border-slate-800 pb-2">Match History</h3>
+                <ul id="game-log" class="space-y-1 text-sm text-slate-400 h-40 overflow-y-auto custom-scrollbar pr-2">
+                    <!-- Logs injected here -->
+                </ul>
             </div>
 
             <!-- Analysis Panel (Hidden by default) -->
@@ -254,14 +297,6 @@
 
             </div>
 
-            <!-- Game Log -->
-            <div class="bg-slate-900 rounded-xl p-4 border border-slate-800 h-48 overflow-y-auto custom-scrollbar">
-                <h3 class="text-sm font-bold text-slate-500 uppercase tracking-wider mb-2 sticky top-0 bg-slate-900 pb-2">Match History</h3>
-                <ul id="game-log" class="space-y-1 text-sm text-slate-400">
-                    <!-- Logs injected here -->
-                </ul>
-            </div>
-
         </div>
     </main>
 
@@ -290,11 +325,11 @@
             p2: { score: 0, sum: 0, die: 6, busted: false, lastAction: null, lastRoll: 0, strategy: 'Random' },
             turn: 1,
             analysis: null, // Holds latest analytical computations
+            roundResults: null, // Holds the score delta generated at end of round
             uiPhase: 'input' // input, resolution
         };
 
         // --- ERROR HANDLING ---
-        // Crucial requirement: Halt execution completely on invalid state
         function triggerFatalError(message) {
             console.error("FATAL ERROR:", message);
             document.getElementById('app').style.display = 'none';
@@ -321,7 +356,7 @@
         }
 
         // --- MATH & ANALYSES ENGINE ---
-        // Computes exact win/loss points according to Depth-1 rules
+        // Computes exact win/loss points according to Depth-1 rules for Matrix Generation
         // Returns relative points for P1 (EV). + means P1 favors, - means P2 favors.
         function evaluatePoints(s1, s2) {
             let p1Bust = s1 > TARGET_SUM;
@@ -415,38 +450,31 @@
                 analysis.matrix.SS.ev = ssRes.ev;
 
                 // Calculate Minimax
-                // Ev Table maps to: Row=P1 action, Col=P2 action
                 let A = [
-                    [analysis.matrix.RR.ev, analysis.matrix.RS.ev], // P1 Rolls
-                    [analysis.matrix.SR.ev, analysis.matrix.SS.ev]  // P1 Stands
+                    [analysis.matrix.RR.ev, analysis.matrix.RS.ev],
+                    [analysis.matrix.SR.ev, analysis.matrix.SS.ev]
                 ];
 
-                // Adjust matrix if someone is busted (they MUST Stand)
-                // P1 maximizes, P2 minimizes
                 if (state.p1.busted && state.p2.busted) {
                     analysis.minimax.p1 = 'Stand'; analysis.minimax.p2 = 'Stand';
                 } else if (state.p1.busted) {
                     analysis.minimax.p1 = 'Stand';
-                    analysis.minimax.p2 = (A[1][0] < A[1][1]) ? 'Roll' : 'Stand'; // P2 minimizes P1's EV
+                    analysis.minimax.p2 = (A[1][0] < A[1][1]) ? 'Roll' : 'Stand';
                 } else if (state.p2.busted) {
                     analysis.minimax.p2 = 'Stand';
-                    analysis.minimax.p1 = (A[0][1] > A[1][1]) ? 'Roll' : 'Stand'; // P1 maximizes
+                    analysis.minimax.p1 = (A[0][1] > A[1][1]) ? 'Roll' : 'Stand';
                 } else {
-                    // Full 2x2 Minimax
                     let rowMins = [Math.min(A[0][0], A[0][1]), Math.min(A[1][0], A[1][1])];
                     let colMaxs = [Math.max(A[0][0], A[1][0]), Math.max(A[0][1], A[1][1])];
                     
                     let lowerVal = Math.max(...rowMins);
                     let upperVal = Math.min(...colMaxs);
-
-                    const EPSILON = 0.0001; // Handle float inaccuracies
+                    const EPSILON = 0.0001; 
 
                     if (Math.abs(lowerVal - upperVal) < EPSILON) {
-                        // Saddle point exists (Pure Strategy)
                         analysis.minimax.p1 = (Math.abs(rowMins[0] - lowerVal) < EPSILON) ? 'Roll' : 'Stand';
                         analysis.minimax.p2 = (Math.abs(colMaxs[0] - upperVal) < EPSILON) ? 'Roll' : 'Stand';
                         
-                        // Handle indifference
                         if (Math.abs(rowMins[0] - rowMins[1]) < EPSILON) {
                             let meanRoll = (A[0][0] + A[0][1]) / 2;
                             let meanStand = (A[1][0] + A[1][1]) / 2;
@@ -457,15 +485,13 @@
                             let meanRoll = (A[0][0] + A[1][0]) / 2;
                             let meanStand = (A[0][1] + A[1][1]) / 2;
                             if (Math.abs(meanRoll - meanStand) < EPSILON) analysis.minimax.p2 = 'Indifferent';
-                            else analysis.minimax.p2 = meanRoll < meanStand ? 'Roll' : 'Stand'; // P2 wants smaller mean
+                            else analysis.minimax.p2 = meanRoll < meanStand ? 'Roll' : 'Stand'; 
                         }
-
                     } else {
-                        // Mixed equilibrium
                         let denomP = (A[0][0] - A[0][1] - A[1][0] + A[1][1]);
                         let p = (A[1][1] - A[1][0]) / denomP;
                         analysis.minimax.p1 = 'Mixed';
-                        analysis.minimax.p1Mixed = Math.max(0, Math.min(1, p)); // Clamp just in case
+                        analysis.minimax.p1Mixed = Math.max(0, Math.min(1, p));
 
                         let denomQ = (A[0][0] - A[0][1] - A[1][0] + A[1][1]);
                         let q = (A[1][1] - A[0][1]) / denomQ;
@@ -494,75 +520,69 @@
             switch (strat) {
                 case "21 or bust":
                     return state.p2.sum < TARGET_SUM ? 'Roll' : 'Stand';
-                
                 case "Won't stay behind":
                     return (state.p2.sum < state.p1.sum && !oppBust) ? 'Roll' : 'Stand';
-
                 case "Low Risk Taker":
                     if (oppBust) return pBust === 0 ? 'Roll' : 'Stand';
                     return pBust < 0.25 ? 'Roll' : 'Stand';
-
                 case "Moderate Risk Taker":
                     if (oppBust) {
-                        // Check if EV(Roll) == EV(Stand) when P1 stands
                         const EPSILON = 0.0001;
                         let evDiff = Math.abs(an.matrix.SR.ev - an.matrix.SS.ev);
                         return (pBust === 0 || evDiff < EPSILON) ? 'Roll' : 'Stand';
                     }
                     return pBust < 0.50 ? 'Roll' : 'Stand';
-
                 case "High Risk Taker":
                     return pBust < 0.75 ? 'Roll' : 'Stand';
-
                 case "Relative Risk Taker":
                     return (!oppBust && pBust < an.p1BustProb) ? 'Roll' : 'Stand';
-
                 case "Game Theorist":
                     let gAction = an.minimax.p2;
                     if (gAction === 'Indifferent') return pBust === 0 ? 'Roll' : 'Stand';
                     if (gAction === 'Mixed') return Math.random() < an.minimax.p2Mixed ? 'Roll' : 'Stand';
-                    return gAction; // 'Roll' or 'Stand'
-
+                    return gAction; 
                 case "Mind Reader":
-                    // Knows P1's locked choice, picks optimal response to MINIMIZE P1 EV
                     let p1ActionMR = state.p1.lastAction; 
-                    if (!p1ActionMR) triggerFatalError("Mind Reader activated before P1 action registered.");
-                    if (p1ActionMR === 'Roll') {
-                        return an.matrix.RR.ev < an.matrix.RS.ev ? 'Roll' : 'Stand';
-                    } else {
-                        return an.matrix.SR.ev < an.matrix.SS.ev ? 'Roll' : 'Stand';
-                    }
-
+                    if (!p1ActionMR) triggerFatalError("Mind Reader activated early.");
+                    if (p1ActionMR === 'Roll') return an.matrix.RR.ev < an.matrix.RS.ev ? 'Roll' : 'Stand';
+                    return an.matrix.SR.ev < an.matrix.SS.ev ? 'Roll' : 'Stand';
                 case "Future Seer":
-                    // Knows P1's exact rolled outcome. Needs to calculate temporary 1x2 matrix.
                     let p1ActionFS = state.p1.lastAction;
-                    if (!p1ActionFS) triggerFatalError("Future Seer activated before P1 action.");
+                    if (!p1ActionFS) triggerFatalError("Future Seer activated early.");
                     
                     let p1TempSum = state.p1.sum + (p1ActionFS === 'Roll' ? state.p1.lastRoll : 0);
-                    
-                    // Temp compute EV for P2 rolling vs standing against this fixed new sum
                     let evRollTemp = 0;
                     for (let r2 = 1; r2 <= state.p2.die; r2++) {
                         evRollTemp += evaluatePoints(p1TempSum, state.p2.sum + r2).ev / state.p2.die;
                     }
                     let evStandTemp = evaluatePoints(p1TempSum, state.p2.sum).ev;
-
-                    // Returns action that MINIMIZES P1's EV
                     return evRollTemp < evStandTemp ? 'Roll' : 'Stand';
-
                 default:
                     triggerFatalError(`Unknown AI Strategy: ${strat}`);
             }
         }
 
-        // --- GAME LOOP MECHANICS ---
+        // Evaluates exact points earned for actual gameplay resolution
+        function calculateRoundResults() {
+            let s1 = state.p1.sum; let s2 = state.p2.sum;
+            let b1 = state.p1.busted; let b2 = state.p2.busted;
+            
+            if (b1 && b2) return { p1: 0, p2: 0, text: "Tie! Both players busted." };
+            if (b1) return { p1: 0, p2: (s2 === TARGET_SUM ? 2 : 1), text: "Player 2 Wins!" };
+            if (b2) return { p1: (s1 === TARGET_SUM ? 2 : 1), p2: 0, text: "Player 1 Wins!" };
+            
+            if (s1 === s2) return { p1: 0, p2: 0, text: "Tie! Equal sums." };
+            if (s1 > s2) return { p1: (s1 === TARGET_SUM ? 2 : 1), p2: 0, text: "Player 1 Wins!" };
+            return { p1: 0, p2: (s2 === TARGET_SUM ? 2 : 1), text: "Player 2 Wins!" };
+        }
 
+        // --- GAME LOOP MECHANICS ---
         function initMatch() {
-            let p1Die = parseInt(document.getElementById('p1-dice-select').value);
+            let p1DieRaw = document.getElementById('p1-dice-select').value;
             let p2DieRaw = document.getElementById('p2-dice-select').value;
             let aiStratRaw = document.getElementById('ai-strategy-select').value;
 
-            // Handle Randoms
+            let p1Die = p1DieRaw === 'Random' ? DICE_OPTIONS[Math.floor(Math.random() * DICE_OPTIONS.length)] : parseInt(p1DieRaw);
             let p2Die = p2DieRaw === 'Random' ? DICE_OPTIONS[Math.floor(Math.random() * DICE_OPTIONS.length)] : parseInt(p2DieRaw);
             let aiStrat = aiStratRaw === 'Random' ? STRATEGIES[Math.floor(Math.random() * STRATEGIES.length)] : aiStratRaw;
 
@@ -572,66 +592,54 @@
                 p2: { score: 0, sum: 0, die: p2Die, busted: false, lastAction: null, lastRoll: 0, strategy: aiStrat },
                 turn: 1,
                 analysis: null,
+                roundResults: null,
                 uiPhase: 'input'
             };
 
-            logEvent(`Match started. P1 (d${p1Die}) vs AI (d${p2Die}, ${aiStrat}).`);
+            logEvent(`Match started. P1 (d${p1Die}) vs AI (d${p2Die}). Strategy Hidden.`);
             
             document.getElementById('menu-screen').classList.add('hidden');
             document.getElementById('game-screen').classList.remove('hidden');
-            
-            document.getElementById('ui-p2-strategy-label').innerText = `AI (${aiStrat})`;
             
             startRound();
         }
 
         function startRound() {
-            state.p1.sum = 0;
-            state.p1.busted = false;
-            state.p2.sum = 0;
-            state.p2.busted = false;
+            state.p1.sum = 0; state.p1.busted = false;
+            state.p2.sum = 0; state.p2.busted = false;
             state.turn = 1;
+            state.roundResults = null;
             logEvent("--- New Round Started ---");
             prepTurn();
         }
 
         function prepTurn() {
-            state.p1.lastAction = null;
-            state.p2.lastAction = null;
-            state.p1.lastRoll = 0;
-            state.p2.lastRoll = 0;
+            state.p1.lastAction = null; state.p2.lastAction = null;
+            state.p1.lastRoll = 0; state.p2.lastRoll = 0;
             state.uiPhase = 'input';
 
-            // Check if game naturally forces a stand due to bust (visually handled in render)
-            computeAnalyzes(); // Prepare math for this state
+            computeAnalyzes();
             render();
         }
 
         // Fired when player clicks Roll or Stand
         function executeTurn(p1Choice) {
-            if (state.uiPhase !== 'input') return; // Prevent double clicks
+            if (state.uiPhase !== 'input') return; 
 
-            // 1. Process P1's decision
+            // 1. Process Decisions
             state.p1.lastAction = p1Choice;
-            if (p1Choice === 'Roll') {
-                state.p1.lastRoll = rollDie(state.p1.die);
-            }
+            if (p1Choice === 'Roll') state.p1.lastRoll = rollDie(state.p1.die);
 
-            // 2. Process P2's decision (with cheating logic supported sequentially)
             state.p2.lastAction = getAIAction();
-            if (state.p2.lastAction === 'Roll') {
-                state.p2.lastRoll = rollDie(state.p2.die);
-            }
+            if (state.p2.lastAction === 'Roll') state.p2.lastRoll = rollDie(state.p2.die);
 
-            // 3. Apply Rolls
+            // 2. Apply Rolls & Busts
             if (state.p1.lastAction === 'Roll') state.p1.sum += state.p1.lastRoll;
             if (state.p2.lastAction === 'Roll') state.p2.sum += state.p2.lastRoll;
-
-            // 4. Update Bust States
             if (state.p1.sum > TARGET_SUM) state.p1.busted = true;
             if (state.p2.sum > TARGET_SUM) state.p2.busted = true;
 
-            // 5. Evaluate Round End Conditions
+            // 3. Evaluate Round End
             let roundEnded = false;
             let endReason = "";
 
@@ -645,76 +653,72 @@
                 roundEnded = true; endReason = "Max turns reached (7/7).";
             }
 
-            // Transition UI
-            state.uiPhase = 'resolution';
-            
-            // Build logging string
+            // 4. Calculate Final Points if Ended
+            if (roundEnded) {
+                let res = calculateRoundResults();
+                state.roundResults = { p1Pts: res.p1, p2Pts: res.p2, reason: endReason, winnerTxt: res.text };
+                logEvent(`Round Over: ${endReason} ${res.text} (P1: +${res.p1}, AI: +${res.p2})`);
+            }
+
             let logMsg = `P1 ${state.p1.lastAction}` + (state.p1.lastAction==='Roll' ? ` (${state.p1.lastRoll})` : '');
             logMsg += ` | AI ${state.p2.lastAction}` + (state.p2.lastAction==='Roll' ? ` (${state.p2.lastRoll})` : '');
             logEvent(logMsg);
 
-            renderTurnResolution(roundEnded, endReason);
+            state.uiPhase = 'resolution';
+            renderTurnResolution(roundEnded);
         }
 
         function resolveRoundScoring() {
-            let ptsP1 = 0;
-            let ptsP2 = 0;
-            let s1 = state.p1.sum;
-            let s2 = state.p2.sum;
-            let b1 = state.p1.busted;
-            let b2 = state.p2.busted;
+            if (!state.roundResults) return;
 
-            if (b1 && b2) {
-                logEvent("Round Tie! Both busted. No points.");
-            } else if (b1) {
-                ptsP2 = (s2 === TARGET_SUM) ? 2 : 1;
-                logEvent(`AI wins round! (+${ptsP2} pts)`);
-            } else if (b2) {
-                ptsP1 = (s1 === TARGET_SUM) ? 2 : 1;
-                logEvent(`Player 1 wins round! (+${ptsP1} pts)`);
-            } else {
-                if (s1 === s2) {
-                    logEvent("Round Tie! Equal sums. No points.");
-                } else if (s1 > s2) {
-                    ptsP1 = (s1 === TARGET_SUM) ? 2 : 1;
-                    logEvent(`Player 1 wins round! (+${ptsP1} pts)`);
-                } else {
-                    ptsP2 = (s2 === TARGET_SUM) ? 2 : 1;
-                    logEvent(`AI wins round! (+${ptsP2} pts)`);
-                }
-            }
+            state.p1.score += state.roundResults.p1Pts;
+            state.p2.score += state.roundResults.p2Pts;
 
-            state.p1.score += ptsP1;
-            state.p2.score += ptsP2;
-
+            // Check match end condition
             if (state.p1.score >= TARGET_SCORE || state.p2.score >= TARGET_SCORE) {
                 let winner = state.p1.score >= TARGET_SCORE ? "Player 1" : "AI";
-                // Tie breaker just in case both hit 10 at same time
                 if (state.p1.score >= TARGET_SCORE && state.p2.score >= TARGET_SCORE) {
                      winner = state.p1.score > state.p2.score ? "Player 1" : (state.p2.score > state.p1.score ? "AI" : "It's a Draw!");
                 }
                 
-                alert(`Match Over! ${winner} wins!`);
-                location.reload(); // Simple reset back to menu
+                // Slight timeout to let DOM render the final scoreboard update before locking up with alert
+                document.getElementById('ui-p1-score').innerText = state.p1.score;
+                document.getElementById('ui-p2-score').innerText = state.p2.score;
+                
+                setTimeout(() => {
+                    alert(`🏁 Match Over! ${winner} Wins!\n\nThe AI was using the strategy: [ ${state.p2.strategy} ]`);
+                    location.reload(); 
+                }, 150);
             } else {
                 startRound();
             }
         }
 
         // --- UI RENDERING ---
-
         function render() {
             if (!state.matchStarted) return;
 
-            // Scoreboard
+            // Scoreboard Header
             document.getElementById('ui-p1-score').innerText = state.p1.score;
             document.getElementById('ui-p2-score').innerText = state.p2.score;
-            document.getElementById('ui-turn-counter').innerText = `Turn ${state.turn}/7`;
+            document.getElementById('ui-turn-counter').innerText = state.turn;
+            document.getElementById('ui-sb-p1-die').innerText = `d${state.p1.die}`;
+            document.getElementById('ui-sb-p2-die').innerText = `d${state.p2.die}`;
 
-            // Player Areas
-            document.getElementById('ui-p1-die').innerText = `d${state.p1.die}`;
-            document.getElementById('ui-p2-die').innerText = `d${state.p2.die}`;
+            // Progress Bars & Sums
+            const maxPct = 100;
+            let p1Pct = Math.min(maxPct, (state.p1.sum / TARGET_SUM) * 100);
+            let p2Pct = Math.min(maxPct, (state.p2.sum / TARGET_SUM) * 100);
+
+            let p1Bar = document.getElementById('p1-progress-bar');
+            let p2Bar = document.getElementById('p2-progress-bar');
             
+            p1Bar.style.width = p1Pct + '%';
+            p2Bar.style.width = p2Pct + '%';
+
+            p1Bar.className = `absolute left-0 top-0 h-full transition-all duration-500 ease-out ${state.p1.busted ? 'bg-red-600' : 'bg-emerald-500'}`;
+            p2Bar.className = `absolute left-0 top-0 h-full transition-all duration-500 ease-out ${state.p2.busted ? 'bg-red-600' : 'bg-cyan-500'}`;
+
             document.getElementById('ui-p1-sum').innerText = state.p1.sum;
             document.getElementById('ui-p2-sum').innerText = state.p2.sum;
 
@@ -724,52 +728,60 @@
 
             // Controls
             let canP1Roll = !state.p1.busted && state.uiPhase === 'input';
-            let canP1Stand = state.uiPhase === 'input'; // Busted players MUST stand, but UI handles click virtually
+            let canP1Stand = state.uiPhase === 'input'; 
             
             document.getElementById('btn-roll').disabled = !canP1Roll;
             document.getElementById('btn-stand').disabled = !canP1Stand;
             
-            // Hide resolution panel during input
+            // Layout Toggling
             document.getElementById('resolution-panel').classList.add('hidden');
-            document.getElementById('p1-controls').classList.remove('hidden');
-
-            document.getElementById('ui-p2-action').innerText = state.uiPhase === 'input' ? "Thinking..." : state.p2.lastAction;
-            document.getElementById('ui-p2-action').className = state.uiPhase === 'input' ? "text-lg font-bold text-slate-400 animate-pulse" : "text-lg font-bold text-cyan-300";
+            document.getElementById('controls-panel').classList.remove('hidden');
 
             renderAnalysis();
         }
 
-        function renderTurnResolution(roundEnded, endReason) {
-            render(); // Update scores/sums visually
+        function renderTurnResolution(roundEnded) {
+            render(); // Let grid update the numbers/bars first
             
-            document.getElementById('p1-controls').classList.add('hidden');
-            let resPanel = document.getElementById('resolution-panel');
-            resPanel.classList.remove('hidden');
+            document.getElementById('controls-panel').classList.add('hidden');
+            document.getElementById('resolution-panel').classList.remove('hidden');
 
             let titleEl = document.getElementById('res-title');
-            let descEl = document.getElementById('res-desc');
+            let infoPanel = document.getElementById('res-round-info');
             let btnNext = document.getElementById('btn-next');
 
-            let p1Txt = `You <strong>${state.p1.lastAction}</strong>` + (state.p1.lastAction === 'Roll' ? ` (rolled ${state.p1.lastRoll})` : '');
-            let p2Txt = `AI <strong>${state.p2.lastAction}</strong>` + (state.p2.lastAction === 'Roll' ? ` (rolled ${state.p2.lastRoll})` : '');
+            // Populate Action Cards
+            document.getElementById('res-p1-action').innerText = state.p1.lastAction;
+            document.getElementById('res-p1-roll').innerText = state.p1.lastAction === 'Roll' ? `+${state.p1.lastRoll}` : '-';
             
-            descEl.innerHTML = `${p1Txt}.<br>${p2Txt}.`;
+            document.getElementById('res-p2-action').innerText = state.p2.lastAction;
+            document.getElementById('res-p2-roll').innerText = state.p2.lastAction === 'Roll' ? `+${state.p2.lastRoll}` : '-';
 
-            // Clear old listeners
+            // Clear old listeners safely
             let newBtn = btnNext.cloneNode(true);
             btnNext.parentNode.replaceChild(newBtn, btnNext);
 
-            if (roundEnded) {
+            if (roundEnded && state.roundResults) {
                 titleEl.innerText = "Round Over";
-                titleEl.className = "text-2xl font-bold mb-2 text-amber-400";
-                descEl.innerHTML += `<br><span class="text-amber-200 block mt-2">${endReason}</span>`;
+                titleEl.className = "text-3xl font-bold mb-6 text-amber-400 uppercase tracking-widest relative z-10";
+                
+                infoPanel.classList.remove('hidden');
+                document.getElementById('res-end-reason').innerText = state.roundResults.reason;
+                
+                let ptsStr = "";
+                if (state.roundResults.p1Pts > 0) ptsStr = ` (+${state.roundResults.p1Pts} pts)`;
+                else if (state.roundResults.p2Pts > 0) ptsStr = ` (+${state.roundResults.p2Pts} pts)`;
+                else ptsStr = " (0 pts)";
+
+                document.getElementById('res-score-update').innerText = state.roundResults.winnerTxt + ptsStr;
+
                 newBtn.innerText = "Next Round";
-                newBtn.addEventListener('click', () => {
-                    resolveRoundScoring();
-                });
+                newBtn.addEventListener('click', resolveRoundScoring);
             } else {
                 titleEl.innerText = `Turn ${state.turn} Complete`;
-                titleEl.className = "text-2xl font-bold mb-2 text-white";
+                titleEl.className = "text-2xl font-bold mb-6 text-white uppercase tracking-widest relative z-10";
+                infoPanel.classList.add('hidden');
+                
                 newBtn.innerText = "Next Turn";
                 newBtn.addEventListener('click', () => {
                     state.turn++;
@@ -785,7 +797,6 @@
             document.getElementById('an-p1-bust').innerText = formatPercent(an.p1BustProb);
             document.getElementById('an-p2-bust').innerText = formatPercent(an.p2BustProb);
 
-            // Minimax
             let mmP1 = an.minimax.p1 === 'Mixed' ? `Mixed (${formatPercent(an.minimax.p1Mixed)} Roll)` : an.minimax.p1;
             let mmP2 = an.minimax.p2 === 'Mixed' ? `Mixed (${formatPercent(an.minimax.p2Mixed)} Roll)` : an.minimax.p2;
             document.getElementById('an-p1-minimax').innerText = mmP1;
@@ -793,7 +804,6 @@
             
             document.getElementById('an-mixed-note').classList.toggle('hidden', an.minimax.p1 !== 'Mixed' && an.minimax.p2 !== 'Mixed');
 
-            // EV Matrix formatting helper
             const fEV = (val) => {
                 if (val > 0) return `<span class="text-emerald-400">+${val.toFixed(2)}</span>`;
                 if (val < 0) return `<span class="text-cyan-400">${val.toFixed(2)}</span>`;
@@ -805,7 +815,6 @@
             document.getElementById('ev-sr').innerHTML = fEV(an.matrix.SR.ev);
             document.getElementById('ev-ss').innerHTML = fEV(an.matrix.SS.ev);
 
-            // Result Probs Matrix formatting helper
             const fRes = (cell) => {
                 let w = (cell.p1W * 100).toFixed(0);
                 let t = (cell.tie * 100).toFixed(0);
@@ -823,12 +832,19 @@
         document.getElementById('btn-start').addEventListener('click', initMatch);
 
         document.getElementById('btn-roll').addEventListener('click', () => {
-            if (state.p1.busted) return; // Button disabled visually, but safeguard here
+            if (state.p1.busted) return; 
             executeTurn('Roll');
         });
 
         document.getElementById('btn-stand').addEventListener('click', () => {
             executeTurn('Stand');
+        });
+
+        // Panel Toggles
+        document.getElementById('btn-toggle-log').addEventListener('click', (e) => {
+            const panel = document.getElementById('log-panel');
+            panel.classList.toggle('hidden');
+            e.target.innerText = panel.classList.contains('hidden') ? "Show Match History" : "Hide Match History";
         });
 
         document.getElementById('btn-toggle-analysis').addEventListener('click', (e) => {
