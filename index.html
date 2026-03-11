@@ -30,11 +30,11 @@
     <main id="app" class="max-w-4xl mx-auto p-4 md:p-6 fade-in">
         
         <!-- HEADER -->
-        <header class="text-center mb-8 text-4xl md:text-5xl font-extrabold">
+        <header class="text-center mb-6 text-4xl md:text-5xl font-extrabold">
             <span>🎲</span> 
             <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">Dice Blackjack</span> 
             <span>💣</span>
-            <p class="text-base font-normal text-slate-400 mt-2">Race to 21. Don't Bust. First to 10 Points Wins.</p>
+            <p class="text-base font-normal text-slate-400 mt-2">Race to 21. Don't Bust. First to 5 Points Wins.</p>
         </header>
 
         <!-- MENU SCREEN -->
@@ -82,6 +82,7 @@
                         <option value="Mind Reader">Mind Reader (Cheater)</option>
                         <option value="Future Seer">Future Seer (Cheater)</option>
                     </select>
+                    <p class="text-xs text-slate-500 mt-2 italic">The chosen strategy will be hidden during gameplay to keep you guessing!</p>
                 </div>
 
                 <button id="btn-start" class="w-full mt-6 bg-gradient-to-r from-emerald-500 to-cyan-600 hover:from-emerald-400 hover:to-cyan-500 text-white font-bold py-3 px-4 rounded-lg shadow-lg transform transition active:scale-95">
@@ -91,12 +92,12 @@
         </div>
 
         <!-- GAME SCREEN -->
-        <div id="game-screen" class="hidden space-y-6">
+        <div id="game-screen" class="hidden space-y-4 md:space-y-6">
             
             <!-- Scoreboard -->
             <div class="flex justify-between items-stretch bg-slate-800 rounded-xl p-4 border border-slate-700 shadow-md">
                 <div class="text-center w-1/3 flex flex-col justify-center">
-                    <p class="text-xs text-slate-400 uppercase tracking-wider">Player 1 (You)(<span id="ui-sb-p1-die" class="text-emerald-300">d6</span>)</p>
+                    <p class="text-xs text-slate-400 uppercase tracking-wider">Player 1 (<span id="ui-sb-p1-die" class="text-emerald-300">d6</span>)</p>
                     <p class="text-4xl font-black text-emerald-400 mt-1" id="ui-p1-score">0</p>
                 </div>
                 <div class="text-center w-1/3 border-x border-slate-700 flex flex-col items-center justify-center">
@@ -105,41 +106,41 @@
                     <p class="text-xs text-slate-500 mt-1">out of 7</p>
                 </div>
                 <div class="text-center w-1/3 flex flex-col justify-center">
-                    <p class="text-xs text-slate-400 uppercase tracking-wider">Player 2 (AI)(<span id="ui-sb-p2-die" class="text-cyan-300">d6</span>)</p>
+                    <p class="text-xs text-slate-400 uppercase tracking-wider">AI (<span id="ui-sb-p2-die" class="text-cyan-300">d6</span>)</p>
                     <p class="text-4xl font-black text-cyan-400 mt-1" id="ui-p2-score">0</p>
                 </div>
             </div>
 
-            <!-- Playing Area Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Playing Area Grid (Reduced vertical space) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                 <!-- Player 1 Panel -->
-                <div class="bg-slate-800 rounded-xl p-6 border border-slate-700 flex flex-col items-center relative overflow-hidden">
+                <div class="bg-slate-800 rounded-xl p-4 border border-slate-700 flex flex-col items-center relative overflow-hidden">
                     <div id="p1-bust-overlay" class="hidden absolute inset-0 bg-red-900/40 z-20 flex items-center justify-center pointer-events-none">
-                        <span class="text-5xl font-black text-red-200 uppercase rotate-12 drop-shadow-2xl border-4 border-red-200 p-2 opacity-80">Busted</span>
+                        <span class="text-4xl font-black text-red-200 uppercase rotate-12 drop-shadow-2xl border-4 border-red-200 p-2 opacity-80">Busted</span>
                     </div>
-                    <h3 class="text-xl font-bold text-slate-300 mb-6 uppercase tracking-wider text-emerald-400/80">Player 1</h3>
+                    <h3 class="text-lg font-bold text-slate-300 mb-3 uppercase tracking-wider text-emerald-400/80">You</h3>
                     
                     <!-- P1 Progress Bar -->
-                    <div class="w-full h-14 bg-slate-900 rounded-xl border border-slate-600 shadow-inner relative overflow-hidden z-10">
+                    <div class="w-full h-10 bg-slate-900 rounded-xl border border-slate-600 shadow-inner relative overflow-hidden z-10">
                         <div id="p1-progress-bar" class="absolute left-0 top-0 h-full bg-emerald-500 transition-all duration-500 ease-out" style="width: 0%;"></div>
                         <div class="absolute inset-0 flex items-center justify-center">
-                            <span class="text-3xl font-black text-white drop-shadow-md z-10"><span id="ui-p1-sum">0</span><span class="text-lg text-white/50 ml-1">/ 21</span></span>
+                            <span class="text-2xl font-black text-white drop-shadow-md z-10"><span id="ui-p1-sum">0</span><span class="text-sm text-white/50 ml-1">/ 21</span></span>
                         </div>
                     </div>
                 </div>
 
                 <!-- Player 2 Panel -->
-                <div class="bg-slate-800 rounded-xl p-6 border border-slate-700 flex flex-col items-center relative overflow-hidden">
+                <div class="bg-slate-800 rounded-xl p-4 border border-slate-700 flex flex-col items-center relative overflow-hidden">
                     <div id="p2-bust-overlay" class="hidden absolute inset-0 bg-red-900/40 z-20 flex items-center justify-center pointer-events-none">
-                        <span class="text-5xl font-black text-red-200 uppercase -rotate-12 drop-shadow-2xl border-4 border-red-200 p-2 opacity-80">Busted</span>
+                        <span class="text-4xl font-black text-red-200 uppercase -rotate-12 drop-shadow-2xl border-4 border-red-200 p-2 opacity-80">Busted</span>
                     </div>
-                    <h3 class="text-xl font-bold text-slate-300 mb-6 uppercase tracking-wider text-cyan-400/80">Player 2</h3>
+                    <h3 class="text-lg font-bold text-slate-300 mb-3 uppercase tracking-wider text-cyan-400/80">Player 2 (AI)</h3>
                     
                     <!-- P2 Progress Bar -->
-                    <div class="w-full h-14 bg-slate-900 rounded-xl border border-slate-600 shadow-inner relative overflow-hidden z-10">
+                    <div class="w-full h-10 bg-slate-900 rounded-xl border border-slate-600 shadow-inner relative overflow-hidden z-10">
                         <div id="p2-progress-bar" class="absolute left-0 top-0 h-full bg-cyan-500 transition-all duration-500 ease-out" style="width: 0%;"></div>
                         <div class="absolute inset-0 flex items-center justify-center">
-                            <span class="text-3xl font-black text-white drop-shadow-md z-10"><span id="ui-p2-sum">0</span><span class="text-lg text-white/50 ml-1">/ 21</span></span>
+                            <span class="text-2xl font-black text-white drop-shadow-md z-10"><span id="ui-p2-sum">0</span><span class="text-sm text-white/50 ml-1">/ 21</span></span>
                         </div>
                     </div>
                 </div>
@@ -148,10 +149,10 @@
             <!-- Player Controls Panel -->
             <div id="controls-panel" class="max-w-md mx-auto">
                 <div class="flex space-x-4 w-full bg-slate-800 p-4 rounded-xl border border-slate-700 shadow-lg">
-                    <button id="btn-roll" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white text-xl font-black py-4 px-4 rounded-lg shadow-md transform transition active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed">
+                    <button id="btn-roll" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white text-lg font-black py-3 px-4 rounded-lg shadow-md transform transition active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed">
                         ROLL
                     </button>
-                    <button id="btn-stand" class="flex-1 bg-slate-600 hover:bg-slate-500 text-white text-xl font-black py-4 px-4 rounded-lg shadow-md transform transition active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed">
+                    <button id="btn-stand" class="flex-1 bg-slate-600 hover:bg-slate-500 text-white text-lg font-black py-3 px-4 rounded-lg shadow-md transform transition active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed">
                         STAND
                     </button>
                 </div>
@@ -165,16 +166,16 @@
                 
                 <div class="grid grid-cols-2 gap-4 md:gap-8 mb-6 relative z-10">
                     <!-- P1 Result Box -->
-                    <div class="bg-slate-900 rounded-xl p-4 border border-slate-700 shadow-inner">
-                        <p class="text-emerald-400 font-bold uppercase tracking-wider text-sm mb-2">Player 1</p>
-                        <div class="text-3xl md:text-4xl font-black text-white mb-1" id="res-p1-action">Roll</div>
-                        <div class="text-xl font-bold text-slate-400" id="res-p1-roll">+5</div>
+                    <div class="bg-slate-900 rounded-xl p-4 border border-slate-700 shadow-inner flex flex-col items-center justify-center min-h-[120px]">
+                        <p class="text-emerald-400 font-bold uppercase tracking-wider text-sm mb-2">You</p>
+                        <div class="text-3xl md:text-4xl font-black text-white mb-2" id="res-p1-action">Roll</div>
+                        <div class="text-xl font-bold min-h-[28px] flex items-center justify-center" id="res-p1-roll">+5</div>
                     </div>
                     <!-- P2 Result Box -->
-                    <div class="bg-slate-900 rounded-xl p-4 border border-slate-700 shadow-inner">
-                        <p class="text-cyan-400 font-bold uppercase tracking-wider text-sm mb-2">Player 2</p>
-                        <div class="text-3xl md:text-4xl font-black text-white mb-1" id="res-p2-action">Stand</div>
-                        <div class="text-xl font-bold text-slate-400" id="res-p2-roll">-</div>
+                    <div class="bg-slate-900 rounded-xl p-4 border border-slate-700 shadow-inner flex flex-col items-center justify-center min-h-[120px]">
+                        <p class="text-cyan-400 font-bold uppercase tracking-wider text-sm mb-2">AI</p>
+                        <div class="text-3xl md:text-4xl font-black text-white mb-2" id="res-p2-action">Stand</div>
+                        <div class="text-xl font-bold min-h-[28px] flex items-center justify-center" id="res-p2-roll">-</div>
                     </div>
                 </div>
 
@@ -191,11 +192,11 @@
 
             <!-- Toggles for Optional Panels -->
             <div class="flex justify-center space-x-6 text-sm">
-                <button id="btn-toggle-analysis" class="text-slate-400 hover:text-white underline transition">
-                    Show Statistical Analyzes
-                </button>
                 <button id="btn-toggle-log" class="text-slate-400 hover:text-white underline transition">
                     Show Match History
+                </button>
+                <button id="btn-toggle-analysis" class="text-slate-400 hover:text-white underline transition">
+                    Show Statistical Analyzes
                 </button>
             </div>
 
@@ -308,7 +309,7 @@
          */
 
         // --- CONSTANTS & CONFIG ---
-        const TARGET_SCORE = 10;
+        const TARGET_SCORE = 5; // Reduced to 5 for faster pacing
         const TARGET_SUM = 21;
         const MAX_TURNS = 7;
         const DICE_OPTIONS = [4, 6, 8, 10, 12, 20];
@@ -321,7 +322,7 @@
         // --- GAME STATE ---
         let state = {
             matchStarted: false,
-            p1: { score: 0, sum: 0, die: 6, busted: false, lastAction: null, lastRoll: 0 },
+            p1: { score: 0, sum: 0, die: 6, busted: false, lastAction: null, lastRoll: 0, isRevealed: true },
             p2: { score: 0, sum: 0, die: 6, busted: false, lastAction: null, lastRoll: 0, strategy: 'Random' },
             turn: 1,
             analysis: null, // Holds latest analytical computations
@@ -513,6 +514,10 @@
             if (state.p2.busted) return 'Stand';
             
             let an = state.analysis;
+            
+            // NEW MASTER RULE: If probability of busting is exactly 0, ALWAYS Roll.
+            if (an.p2BustProb === 0) return 'Roll';
+
             let strat = state.p2.strategy;
             let pBust = an.p2BustProb;
             let oppBust = state.p1.busted;
@@ -523,7 +528,7 @@
                 case "Won't stay behind":
                     return (state.p2.sum < state.p1.sum && !oppBust) ? 'Roll' : 'Stand';
                 case "Low Risk Taker":
-                    if (oppBust) return pBust === 0 ? 'Roll' : 'Stand';
+                    if (oppBust) return pBust === 0 ? 'Roll' : 'Stand'; // Handled by master rule, but kept for clarity
                     return pBust < 0.25 ? 'Roll' : 'Stand';
                 case "Moderate Risk Taker":
                     if (oppBust) {
@@ -568,12 +573,12 @@
             let b1 = state.p1.busted; let b2 = state.p2.busted;
             
             if (b1 && b2) return { p1: 0, p2: 0, text: "Tie! Both players busted." };
-            if (b1) return { p1: 0, p2: (s2 === TARGET_SUM ? 2 : 1), text: "Player 2 Wins!" };
+            if (b1) return { p1: 0, p2: (s2 === TARGET_SUM ? 2 : 1), text: "AI Wins!" };
             if (b2) return { p1: (s1 === TARGET_SUM ? 2 : 1), p2: 0, text: "Player 1 Wins!" };
             
             if (s1 === s2) return { p1: 0, p2: 0, text: "Tie! Equal sums." };
             if (s1 > s2) return { p1: (s1 === TARGET_SUM ? 2 : 1), p2: 0, text: "Player 1 Wins!" };
-            return { p1: 0, p2: (s2 === TARGET_SUM ? 2 : 1), text: "Player 2 Wins!" };
+            return { p1: 0, p2: (s2 === TARGET_SUM ? 2 : 1), text: "AI Wins!" };
         }
 
         // --- GAME LOOP MECHANICS ---
@@ -588,7 +593,7 @@
 
             state = {
                 matchStarted: true,
-                p1: { score: 0, sum: 0, die: p1Die, busted: false, lastAction: null, lastRoll: 0 },
+                p1: { score: 0, sum: 0, die: p1Die, busted: false, lastAction: null, lastRoll: 0, isRevealed: true },
                 p2: { score: 0, sum: 0, die: p2Die, busted: false, lastAction: null, lastRoll: 0, strategy: aiStrat },
                 turn: 1,
                 analysis: null,
@@ -605,7 +610,7 @@
         }
 
         function startRound() {
-            state.p1.sum = 0; state.p1.busted = false;
+            state.p1.sum = 0; state.p1.busted = false; state.p1.isRevealed = true;
             state.p2.sum = 0; state.p2.busted = false;
             state.turn = 1;
             state.roundResults = null;
@@ -616,6 +621,7 @@
         function prepTurn() {
             state.p1.lastAction = null; state.p2.lastAction = null;
             state.p1.lastRoll = 0; state.p2.lastRoll = 0;
+            state.p1.isRevealed = true; // Fully revealed when turn inputs start
             state.uiPhase = 'input';
 
             computeAnalyzes();
@@ -628,12 +634,17 @@
 
             // 1. Process Decisions
             state.p1.lastAction = p1Choice;
-            if (p1Choice === 'Roll') state.p1.lastRoll = rollDie(state.p1.die);
+            if (p1Choice === 'Roll') {
+                state.p1.lastRoll = rollDie(state.p1.die);
+                state.p1.isRevealed = false; // Hide from P1 until they click Reveal
+            } else {
+                state.p1.isRevealed = true; // Stand is instant reveal
+            }
 
             state.p2.lastAction = getAIAction();
             if (state.p2.lastAction === 'Roll') state.p2.lastRoll = rollDie(state.p2.die);
 
-            // 2. Apply Rolls & Busts
+            // 2. Apply Rolls & Busts to underlying state
             if (state.p1.lastAction === 'Roll') state.p1.sum += state.p1.lastRoll;
             if (state.p2.lastAction === 'Roll') state.p2.sum += state.p2.lastRoll;
             if (state.p1.sum > TARGET_SUM) state.p1.busted = true;
@@ -686,7 +697,7 @@
                 document.getElementById('ui-p2-score').innerText = state.p2.score;
                 
                 setTimeout(() => {
-                    alert(`🏁 Match Over! ${winner} Wins!\n\nThe AI was using the strategy: [ ${state.p2.strategy} ]`);
+                    alert(`🏁 Match Over! ${winner} Wins!\n\nThe AI was secretly using the strategy: [ ${state.p2.strategy} ]`);
                     location.reload(); 
                 }, 150);
             } else {
@@ -705,9 +716,13 @@
             document.getElementById('ui-sb-p1-die').innerText = `d${state.p1.die}`;
             document.getElementById('ui-sb-p2-die').innerText = `d${state.p2.die}`;
 
+            // P1 Display Logic (Hides new sum/bust if Roll is pending reveal)
+            let currentP1Sum = state.p1.isRevealed ? state.p1.sum : (state.p1.sum - state.p1.lastRoll);
+            let currentP1Busted = state.p1.isRevealed ? state.p1.busted : false;
+
             // Progress Bars & Sums
             const maxPct = 100;
-            let p1Pct = Math.min(maxPct, (state.p1.sum / TARGET_SUM) * 100);
+            let p1Pct = Math.min(maxPct, (currentP1Sum / TARGET_SUM) * 100);
             let p2Pct = Math.min(maxPct, (state.p2.sum / TARGET_SUM) * 100);
 
             let p1Bar = document.getElementById('p1-progress-bar');
@@ -716,14 +731,14 @@
             p1Bar.style.width = p1Pct + '%';
             p2Bar.style.width = p2Pct + '%';
 
-            p1Bar.className = `absolute left-0 top-0 h-full transition-all duration-500 ease-out ${state.p1.busted ? 'bg-red-600' : 'bg-emerald-500'}`;
+            p1Bar.className = `absolute left-0 top-0 h-full transition-all duration-500 ease-out ${currentP1Busted ? 'bg-red-600' : 'bg-emerald-500'}`;
             p2Bar.className = `absolute left-0 top-0 h-full transition-all duration-500 ease-out ${state.p2.busted ? 'bg-red-600' : 'bg-cyan-500'}`;
 
-            document.getElementById('ui-p1-sum').innerText = state.p1.sum;
+            document.getElementById('ui-p1-sum').innerText = currentP1Sum;
             document.getElementById('ui-p2-sum').innerText = state.p2.sum;
 
             // Bust Overlays
-            document.getElementById('p1-bust-overlay').classList.toggle('hidden', !state.p1.busted);
+            document.getElementById('p1-bust-overlay').classList.toggle('hidden', !currentP1Busted);
             document.getElementById('p2-bust-overlay').classList.toggle('hidden', !state.p2.busted);
 
             // Controls
@@ -749,13 +764,34 @@
             let titleEl = document.getElementById('res-title');
             let infoPanel = document.getElementById('res-round-info');
             let btnNext = document.getElementById('btn-next');
+            let p1RollContainer = document.getElementById('res-p1-roll');
 
-            // Populate Action Cards
-            document.getElementById('res-p1-action').innerText = state.p1.lastAction;
-            document.getElementById('res-p1-roll').innerText = state.p1.lastAction === 'Roll' ? `+${state.p1.lastRoll}` : '-';
-            
+            // --- AI Result is always fully revealed immediately ---
             document.getElementById('res-p2-action').innerText = state.p2.lastAction;
-            document.getElementById('res-p2-roll').innerText = state.p2.lastAction === 'Roll' ? `+${state.p2.lastRoll}` : '-';
+            document.getElementById('res-p2-roll').innerHTML = state.p2.lastAction === 'Roll' ? `<span class="text-cyan-400 font-bold">+${state.p2.lastRoll}</span>` : '<span class="text-slate-500 font-bold">-</span>';
+
+            // --- Player Result handling (The Suspense!) ---
+            document.getElementById('res-p1-action').innerText = state.p1.lastAction;
+
+            if (state.p1.lastAction === 'Roll' && !state.p1.isRevealed) {
+                // Pending Reveal State
+                p1RollContainer.innerHTML = '<button id="btn-reveal" class="bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-bold py-1.5 px-4 rounded shadow-md animate-pulse transform transition active:scale-95">Reveal Roll</button>';
+                
+                document.getElementById('btn-reveal').addEventListener('click', () => {
+                    state.p1.isRevealed = true;
+                    renderTurnResolution(roundEnded); // Re-run this function with revealed state
+                });
+
+                titleEl.innerText = "Waiting for Reveal...";
+                titleEl.className = "text-xl md:text-2xl font-bold mb-6 text-slate-300 uppercase tracking-widest relative z-10 animate-pulse";
+                infoPanel.classList.add('hidden');
+                btnNext.classList.add('hidden'); // Hide next button until revealed
+                return; // Stop execution here until the button is clicked
+            }
+
+            // Fully Revealed State
+            p1RollContainer.innerHTML = state.p1.lastAction === 'Roll' ? `<span class="text-emerald-400 font-bold">+${state.p1.lastRoll}</span>` : '<span class="text-slate-500 font-bold">-</span>';
+            btnNext.classList.remove('hidden');
 
             // Clear old listeners safely
             let newBtn = btnNext.cloneNode(true);
